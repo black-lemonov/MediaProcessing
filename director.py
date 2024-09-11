@@ -1,15 +1,42 @@
 import tkinter as tk
 import tkinter.ttk as ttk 
+from abc import ABC, abstractmethod
+from typing import Literal, Optional
+
+from ttkthemes import ThemedTk
+from overrides import override
 
 import main
 import lab1
 
 
-class Builder:
+class Builder(ABC):
+    @abstractmethod
+    def set_lab1(self) -> None:
+        pass
+    
+    @abstractmethod
+    def set_lab2(self) -> None:
+        pass
+    
+    @abstractmethod
+    def set_lab3(self) -> None:
+        pass
+    
+    @property
+    @abstractmethod
+    def app(self) -> main.App:
+        pass
+
+
+class TkBuilder(Builder):
     def __init__(self) -> None:
-        self._window = tk.Tk()
+        self._set_window()
         self._labs_nbook = ttk.Notebook(self._window)
         self._labs: list[main.TaskFrame] = []
+        
+    def _set_window(self) -> None:
+        self._window = tk.Tk()
     
     def set_lab1(self) -> None:
         lab1_frame = ttk.Frame(self._labs_nbook)
@@ -27,6 +54,12 @@ class Builder:
                 'Лаб 1'
             )
         )
+        
+    def set_lab2(self) -> None:
+        raise NotImplementedError
+    
+    def set_lab3(self) -> None:
+        raise NotImplementedError
     
     @property
     def app(self) -> main.App:
@@ -35,6 +68,17 @@ class Builder:
             self._labs_nbook,
             self._labs
         )
+        
+
+class ThemedTkBuilder(TkBuilder):
+    def __init__(self,
+                 theme: Optional[Literal['arc', 'blue', 'clearlooks', 'elegane', 'kroc', 'plastik', 'radiance', 'ubuntu', 'winxpblue']] = None) -> None:
+        self._theme = theme
+        super().__init__()
+
+    @override
+    def _set_window(self) -> None:
+        self._window = ThemedTk(theme=self._theme)
     
 class Director:
     def min_app(self, builder: Builder) -> main.App:
@@ -44,4 +88,4 @@ class Director:
 
 if __name__ == "__main__":
     director = Director()
-    director.min_app(Builder()).run()
+    director.min_app(ThemedTkBuilder(theme='clearlooks')).run()
