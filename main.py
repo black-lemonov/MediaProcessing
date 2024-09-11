@@ -4,11 +4,13 @@ from tkinter import Tk, ttk
 from abc import ABC, abstractmethod
 from sys import exit
 
+from ttkthemes import ThemedTk
+
 
 class App:
     '''Приложение с лабами'''
     def __init__(self,
-                 window: Tk,
+                 window: Tk | ThemedTk,
                  labs_master: ttk.Notebook = None,
                  labs: Iterable[LabFrame] = None) -> None:
         self._window = window
