@@ -33,7 +33,7 @@ class TkBuilder(Builder):
     def __init__(self) -> None:
         self._set_window()
         self._labs_nbook = ttk.Notebook(self._window)
-        self._labs: list[main.TaskFrame] = []
+        self._labs: list[main.LabFrame] = []
         
     def _set_window(self) -> None:
         self._window = tk.Tk()
@@ -80,6 +80,7 @@ class ThemedTkBuilder(TkBuilder):
     def _set_window(self) -> None:
         self._window = ThemedTk(theme=self._theme)
     
+    
 class Director:
     def min_app(self, builder: Builder) -> main.App:
         builder.set_lab1()
@@ -88,4 +89,4 @@ class Director:
 
 if __name__ == "__main__":
     director = Director()
-    director.min_app(ThemedTkBuilder(theme='clearlooks')).run()
+    director.min_app(ThemedTkBuilder(theme='plastik')).run()
