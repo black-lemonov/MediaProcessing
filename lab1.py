@@ -4,7 +4,6 @@ import tkinter.filedialog as fd
 from tkinter import messagebox as msg
 
 from overrides import override
-from ffpyplayer.player import MediaPlayer
 import cv2
 
 import main
@@ -17,9 +16,9 @@ class Task2(main.TaskFrame):
     
     def _set_filters_frame(self) -> None:
         self._filters: dict[str, int] = {
-            'оригинальный': cv2.IMREAD_UNCHANGED,
-            'серый': cv2.IMREAD_GRAYSCALE,
-            'RGB': cv2.IMREAD_COLOR,
+            'UNCHANGED': cv2.IMREAD_UNCHANGED,
+            'GRAYSCALE': cv2.IMREAD_GRAYSCALE,
+            'COLOR': cv2.IMREAD_COLOR,
         }
         self._filter_var = tk.IntVar(value=cv2.IMREAD_UNCHANGED)
         self._filters_frame = ttk.Frame(self._main_frame)
@@ -36,14 +35,14 @@ class Task2(main.TaskFrame):
             
     def _set_sizes_frame(self) -> None:
         self._win_sizes: dict[str, int] = {
-            'нормальный': cv2.WINDOW_NORMAL,
-            'полный экран': cv2.WINDOW_FULLSCREEN,
-            'те же пропорции': cv2.WINDOW_FREERATIO
+            'NORMAL': cv2.WINDOW_GUI_NORMAL,
+            'FULLSCREEN': cv2.WINDOW_FULLSCREEN,
+            'FREERATIO': cv2.WINDOW_FREERATIO
         }
         self._size_var = tk.IntVar(value=cv2.WINDOW_NORMAL)
         self._sizes_frame = ttk.Frame(self._main_frame)
 
-        ttk.Label(self._sizes_frame, text='Размеры:').pack(expand=True, fill='x')
+        ttk.Label(self._sizes_frame, text='Формат:').pack(expand=True, fill='x')
         
         for k, v in self._win_sizes.items():
             ttk.Radiobutton(
@@ -128,9 +127,8 @@ class Task3(main.TaskFrame):
             
     def _set_sizes_frame(self) -> None:
         self._win_sizes: dict[str, int] = {
-            'нормальный': cv2.WINDOW_NORMAL,
-            'полный экран': cv2.WINDOW_FULLSCREEN,
-            'те же пропорции': cv2.WINDOW_FREERATIO
+            'FULLSCREEN': cv2.WINDOW_FULLSCREEN,
+            'FREERATIO': cv2.WINDOW_FREERATIO
         }
         self._size_var = tk.IntVar(value=cv2.WINDOW_NORMAL)
         self._sizes_frame = ttk.Frame(self._main_frame)
@@ -176,7 +174,7 @@ class Task3(main.TaskFrame):
         
     def _set_filepath(self) -> None:
         self._filepath = fd.askopenfilename(
-            title='Выберите фотографию:',
+            title='Выберите видео:',
             initialdir=r'D:\Media\vids'
         )
         if len(self._filepath) > 0:
@@ -186,29 +184,21 @@ class Task3(main.TaskFrame):
         video = self._filepath
         size = self._size_var.get()
         color = self._filter_var.get()
-        fps = 60
+        _delay = 60
         
         cap = cv2.VideoCapture(video, cv2.CAP_ANY)
-        player = MediaPlayer(video)
+        
         if not cap.isOpened():
             return
         
+        cv2.namedWindow(video, size)        
         while cap.grab():
             is_ok, frame = cap.read()
-            audio_frame, val = player.get_frame()
             if not is_ok:
-                break      
-            try:
-                filtered_frame = cv2.cvtColor(frame, color)
-            except KeyError:
-                print(
-                    f'''Неизвестный фильтр: {color}.
-                    Доступные фильтры: {', '.join(self._filters.keys())} .'''
-                )
-            
+                break     
+            filtered_frame = cv2.cvtColor(frame, color)
             cv2.imshow(video, filtered_frame)
-            
-            if cv2.waitKey(fps) == 27:
+            if cv2.waitKey(_delay) == 27:
                 break
             
         cap.release()
@@ -249,7 +239,7 @@ class Task4(main.TaskFrame):
     def _save_video(self) -> None:        
         src = self._src_path
         dest = fd.asksaveasfilename(
-            title='Копирование...',
+            title='Сохранить как...',
             initialdir=r'D:\Media\vids',
             initialfile='копия_без_звука.mp4',
             defaultextension='.mp4',
