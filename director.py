@@ -44,7 +44,12 @@ class TkBuilder(Builder):
         task2 = lab1.Task2(tasks_master, 'Задание 2')
         task3 = lab1.Task3(tasks_master, 'Задание 3')
         task4 = lab1.Task4(tasks_master, 'Задание 4')
-        tasks = (task2, task3, task4)
+        task5 = lab1.Task5(tasks_master, 'Задание 5')
+        task6 = lab1.Task6(tasks_master, 'Задание 6')
+        task7 = lab1.Task7(tasks_master, 'Задание 7')
+        task8 = lab1.Task8(tasks_master, 'Задание 8')
+        task9 = lab1.Task9(tasks_master, 'Задание 9')
+        tasks = (task2, task3, task4, task5, task6, task7, task8, task9)
         self._labs.append(
             main.LabFrame(
                 self._labs_nbook,
