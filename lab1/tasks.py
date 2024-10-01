@@ -64,10 +64,10 @@ class Task2(app.TaskFrame):
         ).grid(row=0, column=0, columnspan=2)
         
         self._set_colors_frame()
-        self._colors_frame.grid(row=1, column=0)
+        self._colors_frame.grid(row=1, column=0, sticky='n')
         
         self._set_wins_frame()
-        self._sizes_frame.grid(row=1, column=1)
+        self._sizes_frame.grid(row=1, column=1, sticky='n')
         
         ttk.Button(
             self._root,
@@ -168,10 +168,10 @@ class Task3(app.TaskFrame):
         ).grid(row=0, column=0, columnspan=2)
         
         self._set_colors_frame()
-        self._colors_frame.grid(row=1, column=0)
+        self._colors_frame.grid(row=1, column=0, sticky='n')
         
         self._set_wins_frame()
-        self._wins_frame.grid(row=1, column=1)
+        self._wins_frame.grid(row=1, column=1, sticky='n')
         
         ttk.Button(
             self._root,
@@ -501,7 +501,7 @@ class Task9(app.TaskFrame):
         ttk.Label(
             self._root,
             text="Введите ip-адрес камеры:"
-        ).grid(row=1, column=0)
+        ).grid(row=1, column=0, sticky='e', padx=10)
         
         self._ip_var = tk.StringVar(value="")
         self._ip_regex = re.compile(
@@ -512,7 +512,7 @@ class Task9(app.TaskFrame):
         ttk.Entry(
             self._root,
             textvariable=self._ip_var
-        ).grid(row=1, column=1)
+        ).grid(row=1, column=1, sticky='w', padx=10)
         
         self._warning_msg = tk.StringVar(value="")
         ttk.Label(
