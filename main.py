@@ -22,7 +22,7 @@ class App:
     def _set_window(self) -> None:
         '''Создание окна'''
         self._window.title("Алгоритмы цифровой обработки мультимедиа")
-        self._window.geometry('760x440+400+200')
+        self._window.geometry('760x540+400+200')
         self._window.wm_protocol('WM_DELETE_WINDOW', exit)
         
     def _set_labs(self) -> None:
@@ -79,7 +79,7 @@ class TaskFrame(ABC):
     def _set_root(self) -> None:
         '''Создание Frame на котором все расположено'''
         self._root = ttk.Frame(self._nbook)
-        
+        self._root.pack(expand=True, fill="both")
             
     @abstractmethod
     def _set_task(self) -> None:

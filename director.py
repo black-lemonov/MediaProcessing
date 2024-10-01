@@ -6,7 +6,7 @@ from typing import Literal, override
 from ttkthemes import ThemedTk
 
 import main
-import lab1
+import lab1.tasks as lab1
 
 
 class Builder(ABC):
