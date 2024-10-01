@@ -33,16 +33,16 @@ def show_image(path: str,
     cv2.imshow(win_title, frame)
 
 
-def move_window(win_title: str, x: int, y: int):
+def move_window(win_title: str, x: int, y: int) -> None:
     cv2.moveWindow(win_title, x, y)
 
 
-def close_window(win_title: str, key: int = 27):
+def close_window(win_title: str, key: int = 27) -> None:
     if cv2.waitKey(0) == key:
         cv2.destroyWindow(win_title)
         
         
-def close_all(key: int = 27):
+def close_all(key: int = 27) -> None:
     if cv2.waitKey(0) == key:
         cv2.destroyAllWindows()
         
@@ -171,7 +171,7 @@ def record_cam(dest_path: str) -> None:
             break
         
 
-def round_color(color: Iterable[int]):
+def round_color(color: Iterable[int]) -> tuple[int, int, int]:
     b, g, _ = color
     _max = max(color)
     if _max == b:

@@ -7,6 +7,7 @@ import tkinter.filedialog as fd
 from tkinter import messagebox as msg
 import json
 import os
+import re
 
 import main
 import lab1.funcs as funcs
@@ -232,7 +233,7 @@ class Task4(main.TaskFrame):
         
         ttk.Label(
             self._root,
-            text="Запись видео"
+            text="Перезапись видео"
         ).grid(row=0, column=0, columnspan=2)
         
         self._choose_btn = ttk.Button(
@@ -489,8 +490,7 @@ class Task8(main.TaskFrame):
 class Task9(main.TaskFrame):
     '''Лаб 1. Задание 9. IP-камера'''
     def _set_task(self) -> None:
-        self._root.rowconfigure(index=(0, 2), weight=1)
-        self._root.rowconfigure(index=1, weight=2)
+        self._root.rowconfigure(index=(0,1,2,3), weight=1)
         self._root.columnconfigure(index=(0, 1), weight=1)
         
         ttk.Label(
@@ -504,24 +504,42 @@ class Task9(main.TaskFrame):
         ).grid(row=1, column=0)
         
         self._ip_var = tk.StringVar(value="")
+        self._ip_regex = re.compile(
+            "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+        )
+        self._ip_var.trace_add("write", self._ip_correct)
         
         ttk.Entry(
             self._root,
             textvariable=self._ip_var
         ).grid(row=1, column=1)
         
-        ttk.Button(
+        self._warning_lbl = ttk.Label(
+            self._root,
+            text="Неправильно указан ipv4",
+            foreground="red"
+        )
+        self._warning_lbl.grid(row=2, column=0, columnspan=2)
+        self._warning_lbl.grid_remove()
+        
+        self._open_btn = ttk.Button(
             self._root,
             text='Открыть камеру',
-            command=self._show_cam
-        ).grid(row=2, column=0, columnspan=2)
+            command=self._show_cam,
+            state="disabled"
+        )
+        self._open_btn.grid(row=3, column=0, columnspan=2)
     
-    def _show_cam(self) -> None:
-        if (ip:=self._ip_var.get()) != "":
-            funcs.play_video(path=ip)
+    def _ip_correct(self, *_) -> None:
+        if self._ip_regex.fullmatch(self._ip_var.get()) is None:
+            self._warning_lbl.grid()
+            self._open_btn.config(state="disabled")
         else:
-            msg.showwarning(
-                title="Не найдена камера",
-                message="Камера с таким ip не найдена, проверьте подключение и повторите попытку."
-            )
+            self._warning_lbl.grid_remove()
+            self._open_btn.config(state="normal")
+            
+    def _show_cam(self) -> None:
+        ip = self._ip_var.get()
+        funcs.play_video(path=ip)
+
     
