@@ -1,12 +1,12 @@
 '''Функция с заданиями к лаб1'''
 
-from typing import Literal, Iterable
+from typing import Literal, Iterable, Final
 from tkinter import messagebox as msg
 import time
 
 import cv2
 
-CV_COLOR_SPACES: dict[Literal["BGRA", "GRAY", "LUV", "HLS", "HSV", "YCrCb", "YUV"], int] = {
+CV_COLOR_SPACES: Final[dict[Literal["BGRA", "GRAY", "LUV", "HLS", "HSV", "YCrCb", "YUV"], int]] = {
     "BGRA": cv2.COLOR_BGR2BGRA,
     "GRAY": cv2.COLOR_BGR2GRAY,
     "LUV": cv2.COLOR_BGR2LUV,
@@ -16,7 +16,7 @@ CV_COLOR_SPACES: dict[Literal["BGRA", "GRAY", "LUV", "HLS", "HSV", "YCrCb", "YUV
     "YUV": cv2.COLOR_BGR2YUV,
 }
 
-CV_WINDOW_FLAGS: dict[Literal["NORMAL", "FULLSCREEN", "KEEPRATIO"], int] = {
+CV_WINDOW_FLAGS: Final[dict[Literal["NORMAL", "FULLSCREEN", "KEEPRATIO"], int]] = {
     "NORMAL": cv2.WINDOW_GUI_NORMAL,
     "FULLSCREEN": cv2.WINDOW_FULLSCREEN,
     "KEEPRATIO": cv2.WND_PROP_ASPECT_RATIO
