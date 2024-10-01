@@ -1,10 +1,9 @@
 import tkinter as tk
 import tkinter.ttk as ttk 
 from abc import ABC, abstractmethod
-from typing import Literal, Optional
+from typing import Literal, override
 
 from ttkthemes import ThemedTk
-from overrides import override
 
 import main
 import lab1
@@ -77,7 +76,7 @@ class TkBuilder(Builder):
 
 class ThemedTkBuilder(TkBuilder):
     def __init__(self,
-                 theme: Optional[Literal['arc', 'blue', 'clearlooks', 'elegane', 'kroc', 'plastik', 'radiance', 'ubuntu', 'winxpblue']] = None) -> None:
+                 theme: Literal['arc', 'blue', 'clearlooks', 'elegance', 'kroc', 'plastik', 'radiance', 'ubuntu', 'winxpblue'] | None = None) -> None:
         self._theme = theme
         super().__init__()
 
@@ -94,4 +93,4 @@ class Director:
 
 if __name__ == "__main__":
     director = Director()
-    director.min_app(ThemedTkBuilder(theme='plastik')).run()
+    director.min_app(ThemedTkBuilder(theme='ubuntu')).run()

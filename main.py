@@ -22,7 +22,7 @@ class App:
     def _set_window(self) -> None:
         '''Создание окна'''
         self._window.title("Алгоритмы цифровой обработки мультимедиа")
-        self._window.geometry('550x440+400+200')
+        self._window.geometry('760x440+400+200')
         self._window.wm_protocol('WM_DELETE_WINDOW', exit)
         
     def _set_labs(self) -> None:
