@@ -5,7 +5,7 @@ from typing import Literal, override
 
 from ttkthemes import ThemedTk
 
-import main
+import app
 import lab1.tasks as lab1
 
 
@@ -24,7 +24,7 @@ class Builder(ABC):
     
     @property
     @abstractmethod
-    def app(self) -> main.App:
+    def app(self) -> app.App:
         pass
 
 
@@ -32,7 +32,7 @@ class TkBuilder(Builder):
     def __init__(self) -> None:
         self._set_window()
         self._labs_nbook = ttk.Notebook(self._window)
-        self._labs: list[main.LabFrame] = []
+        self._labs: list[app.LabFrame] = []
         
     def _set_window(self) -> None:
         self._window = tk.Tk()
@@ -50,7 +50,7 @@ class TkBuilder(Builder):
         task9 = lab1.Task9(tasks_master, 'Задание 9')
         tasks = (task2, task3, task4, task5, task6, task7, task8, task9)
         self._labs.append(
-            main.LabFrame(
+            app.LabFrame(
                 self._labs_nbook,
                 lab1_frame,
                 tasks_master,
@@ -66,8 +66,8 @@ class TkBuilder(Builder):
         raise NotImplementedError
     
     @property
-    def app(self) -> main.App:
-        return main.App(
+    def app(self) -> app.App:
+        return app.App(
             self._window,
             self._labs_nbook,
             self._labs
@@ -86,11 +86,11 @@ class ThemedTkBuilder(TkBuilder):
     
     
 class Director:
-    def min_app(self, builder: Builder) -> main.App:
+    def min_app(self, builder: Builder) -> app.App:
         builder.set_lab1()
         return builder.app
 
 
-if __name__ == "__main__":
+if __name__ == "__app__":
     director = Director()
     director.min_app(ThemedTkBuilder(theme='ubuntu')).run()

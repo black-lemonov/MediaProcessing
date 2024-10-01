@@ -9,11 +9,11 @@ import json
 import os
 import re
 
-import main
+import app
 import lab1.funcs as funcs
 
 
-class Task2(main.TaskFrame):
+class Task2(app.TaskFrame):
     '''Лаб 1. Задание 2.
     Открытие фото в окнах разных размеров
     и с разными цвето-фильтрами.'''
@@ -120,7 +120,7 @@ class Task2(main.TaskFrame):
         funcs.close_window(win_title=path)
 
 
-class Task3(main.TaskFrame):
+class Task3(app.TaskFrame):
     '''Лаб 1. Задание 3. Открытие видео с разными фильтрами.'''    
     def _set_colors_frame(self) -> None:
         _color_spaces = funcs.CV_COLOR_SPACES
@@ -223,7 +223,7 @@ class Task3(main.TaskFrame):
         )
 
 
-class Task4(main.TaskFrame):
+class Task4(app.TaskFrame):
     '''Лаб 1. Задание 4. Записывает видео из файла в другой файл'''
     @override
     def _set_task(self) -> None:
@@ -314,7 +314,7 @@ class Task4(main.TaskFrame):
         self._save_btn.config(state='normal')   
     
 
-class Task5(main.TaskFrame):
+class Task5(app.TaskFrame):
     '''Лаб 1. Задание 5.
     Прочитать изображение, перевести его в формат HSV.
     Вывести на экран два окна, в одном изображение в формате HSV,
@@ -386,7 +386,7 @@ class Task5(main.TaskFrame):
         self._choose_btn.config(state='normal')
         
 
-class Task6(main.TaskFrame):
+class Task6(app.TaskFrame):
     '''Лаб 1. Задание 6.
     Прочитать изображение с камеры.
     Вывести в центре на экране Красный крест в формате,
@@ -408,7 +408,7 @@ class Task6(main.TaskFrame):
         ).grid(row=2, column=0, columnspan=2)
             
 
-class Task7(main.TaskFrame):
+class Task7(app.TaskFrame):
     '''Лаб 1. Задание 7.
     Отобразить информацию с вебкамеры, записать видео в файл, продемонстрировать видео.'''
     def _set_task(self) -> None:
@@ -468,7 +468,7 @@ class Task7(main.TaskFrame):
         self._rec_btn.config(state='disabled')  
     
                 
-class Task8(main.TaskFrame):
+class Task8(app.TaskFrame):
     '''Лаб 1. Задание 8. Крестовина хамелион'''
     def _set_task(self) -> None:
         self._root.rowconfigure(index=(0, 2), weight=1)
@@ -487,7 +487,7 @@ class Task8(main.TaskFrame):
         ).grid(row=2, column=0, columnspan=2)
             
 
-class Task9(main.TaskFrame):
+class Task9(app.TaskFrame):
     '''Лаб 1. Задание 9. IP-камера'''
     def _set_task(self) -> None:
         self._root.rowconfigure(index=(0,1,2,3), weight=1)
