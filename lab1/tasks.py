@@ -505,7 +505,7 @@ class Task9(app.TaskFrame):
         
         self._ip_var = tk.StringVar(value="")
         self._ip_regex = re.compile(
-            "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+            "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
         )
         self._ip_var.trace_add("write", self._ip_correct)
         
@@ -514,13 +514,12 @@ class Task9(app.TaskFrame):
             textvariable=self._ip_var
         ).grid(row=1, column=1)
         
-        self._warning_lbl = ttk.Label(
+        self._warning_msg = tk.StringVar(value="")
+        ttk.Label(
             self._root,
-            text="Неправильно указан ipv4",
+            textvariable=self._warning_msg,
             foreground="red"
-        )
-        self._warning_lbl.grid(row=2, column=0, columnspan=2)
-        self._warning_lbl.grid_remove()
+        ).grid(row=2, column=0, columnspan=2)
         
         self._open_btn = ttk.Button(
             self._root,
@@ -532,10 +531,10 @@ class Task9(app.TaskFrame):
     
     def _ip_correct(self, *_) -> None:
         if self._ip_regex.fullmatch(self._ip_var.get()) is None:
-            self._warning_lbl.grid()
+            self._warning_msg.set(value="Неправильно указан ipv4")
             self._open_btn.config(state="disabled")
         else:
-            self._warning_lbl.grid_remove()
+            self._warning_msg.set(value="")
             self._open_btn.config(state="normal")
             
     def _show_cam(self) -> None:
