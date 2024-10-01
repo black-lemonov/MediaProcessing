@@ -89,8 +89,4 @@ class Director:
     def min_app(self, builder: Builder) -> app.App:
         builder.set_lab1()
         return builder.app
-
-
-if __name__ == "__app__":
-    director = Director()
-    director.min_app(ThemedTkBuilder(theme='ubuntu')).run()
+        
