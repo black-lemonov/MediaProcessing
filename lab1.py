@@ -28,9 +28,11 @@ class Task2(main.TaskFrame):
             'YUV': cv2.COLOR_BGR2YUV,
         }
         self._color_space_var = tk.IntVar(value=_color_spaces['BGRA'])
-        self._colors_frame = ttk.Frame(self._main_frame)
-
-        ttk.Label(self._colors_frame, text='Цветовые модели:').pack(expand=True, fill='x')
+        self._colors_frame = ttk.Frame(self._root)
+        ttk.Label(
+            self._colors_frame,
+            text='Цветовые модели:'
+        ).pack(expand=True, fill='x')
         
         for k, v in _color_spaces.items():
             ttk.Radiobutton(
@@ -47,9 +49,11 @@ class Task2(main.TaskFrame):
             'KEEPRATIO': cv2.WND_PROP_ASPECT_RATIO
         }
         self._size_var = tk.IntVar(value=_win_flags['NORMAL'])
-        self._sizes_frame = ttk.Frame(self._main_frame)
-
-        ttk.Label(self._sizes_frame, text='Окно:').pack(expand=True, fill='x')
+        self._sizes_frame = ttk.Frame(self._root)
+        ttk.Label(
+            self._sizes_frame,
+            text='Окно:'
+        ).pack(expand=True, fill='x')
         
         for k, v in _win_flags.items():
             ttk.Radiobutton(
@@ -61,15 +65,12 @@ class Task2(main.TaskFrame):
         
     @override
     def _set_task(self) -> None:
-        self._main_frame = ttk.Frame(self._root)
-        self._main_frame.pack(expand=True, fill='both')
-        
-        self._main_frame.rowconfigure(index=(0,2), weight=1)
-        self._main_frame.rowconfigure(index=1, weight=2)
-        self._main_frame.columnconfigure(index=(0, 1), weight=1)
+        self._root.rowconfigure(index=(0,2), weight=1)
+        self._root.rowconfigure(index=1, weight=2)
+        self._root.columnconfigure(index=(0,1), weight=1)
         
         ttk.Label(
-            self._main_frame,
+            self._root,
             text="Вывод изображения",
         ).grid(row=0, column=0, columnspan=2)
         
@@ -80,13 +81,13 @@ class Task2(main.TaskFrame):
         self._sizes_frame.grid(row=1, column=1)
         
         ttk.Button(
-            self._main_frame,
+            self._root,
             text='Выбрать фото...',
             command=self._set_filepath
         ).grid(row=2, column=0)
         
         self._open_btn = ttk.Button(
-            self._main_frame,
+            self._root,
             text='Открыть',
             state='disabled',
             command=self._set_image
@@ -149,8 +150,7 @@ class Task3(main.TaskFrame):
             'YUV': cv2.COLOR_BGR2YUV,
         }
         self._color_space_var = tk.IntVar(value=_color_spaces['BGRA'])
-        self._colors_frame = ttk.Frame(self._main_frame)
-
+        self._colors_frame = ttk.Frame(self._root)
         ttk.Label(
             self._colors_frame,
             text='Цветовые модели:'
@@ -171,9 +171,11 @@ class Task3(main.TaskFrame):
             'KEEPRATIO': cv2.WND_PROP_ASPECT_RATIO
         }
         self._win_var = tk.IntVar(value=_win_flags['NORMAL'])
-        self._wins_frame = ttk.Frame(self._main_frame)
-
-        ttk.Label(self._wins_frame, text='Окно:').pack(expand=True, fill='x')
+        self._wins_frame = ttk.Frame(self._root)
+        ttk.Label(
+            self._wins_frame,
+            text='Окно:'
+        ).pack(expand=True, fill='x')
         
         for k, v in _win_flags.items():
             ttk.Radiobutton(
@@ -185,15 +187,12 @@ class Task3(main.TaskFrame):
     
     @override
     def _set_task(self) -> None:
-        self._main_frame = ttk.Frame(self._root)
-        self._main_frame.pack(expand=True, fill='both')
-        
-        self._main_frame.rowconfigure(index=1, weight=2)
-        self._main_frame.rowconfigure(index=(0, 2), weight=1)
-        self._main_frame.columnconfigure(index=(0, 1), weight=1)
+        self._root.rowconfigure(index=(0, 2), weight=1)
+        self._root.rowconfigure(index=1, weight=2)
+        self._root.columnconfigure(index=(0, 1), weight=1)
         
         ttk.Label(
-            self._main_frame,
+            self._root,
             text="Вывод видео",
         ).grid(row=0, column=0, columnspan=2)
         
@@ -204,13 +203,13 @@ class Task3(main.TaskFrame):
         self._wins_frame.grid(row=1, column=1)
         
         ttk.Button(
-            self._main_frame,
+            self._root,
             text='Выбрать видео...',
             command=self._set_filepath
         ).grid(row=2, column=0)
         
         self._play_btn = ttk.Button(
-            self._main_frame,
+            self._root,
             text='Открыть',
             state='disabled',
             command=self._set_video
@@ -258,42 +257,45 @@ class Task3(main.TaskFrame):
             return
         
         cv2.namedWindow(win_title, win_flag)        
-        while cap.grab():
-            frame = cap.read()[1]
+        while True:
+            grabbed, frame = cap.read()
+            if not grabbed:
+                break
             colored_frame = cv2.cvtColor(frame, color_space)
             cv2.imshow(win_title, colored_frame)
-            if cv2.waitKey(60) == 27:
-                cap.release()
-                cv2.destroyWindow(win_title)
+            if cv2.waitKey(70) == 27:
                 break
+        cap.release()
+        cv2.destroyWindow(win_title)
 
 
 class Task4(main.TaskFrame):
     '''Лаб 1. Задание 4. Записывает видео из файла в другой файл'''
     @override
     def _set_task(self) -> None:
-        self._main_frame = ttk.Frame(self._root)
-        self._main_frame.pack(expand=True, fill='both')
+        self._root.rowconfigure(index=(0, 2), weight=1)
+        self._root.rowconfigure(index=1, weight=2)
+        self._root.columnconfigure(index=(0, 1), weight=1)
         
         ttk.Label(
-            self._main_frame,
+            self._root,
             text="Запись видео"
-        ).pack(expand=True)
+        ).grid(row=0, column=0, columnspan=2)
         
         self._choose_btn = ttk.Button(
-            self._main_frame,
+            self._root,
             text='Выбрать видео...',
             command=self._set_src_path
         )
-        self._choose_btn.pack(expand=True)
+        self._choose_btn.grid(row=2, column=0)
         
         self._save_btn = ttk.Button(
-            self._main_frame,
+            self._root,
             text='Сохранить как...',
             state='disabled',
             command=self._save_video
         )
-        self._save_btn.pack(expand=True)
+        self._save_btn.grid(row=2, column=1)
 
     def _set_src_path(self) -> None:
         try:
@@ -346,7 +348,7 @@ class Task4(main.TaskFrame):
             return
         self._choose_btn.config(state='disabled')
         self._save_btn.config(state='disabled')
-        self._main_frame.update()
+        self._root.update()
         self.save_video(src, dest)
         self._choose_btn.config(state='normal')
         self._save_btn.config(state='normal')   
@@ -356,19 +358,25 @@ class Task4(main.TaskFrame):
         vid_reader = cv2.VideoCapture(src_path)
         
         if not vid_reader.isOpened():
-            msg.showerror(title="Ошибка", message="Видео не было открыто. Проверьте путь к источнику.")
+            msg.showerror(
+                title="Ошибка",
+                message="Видео не было открыто. Проверьте путь к источнику."
+            )
             return
         
         w = int(vid_reader.get(cv2.CAP_PROP_FRAME_WIDTH))
         h = int(vid_reader.get(cv2.CAP_PROP_FRAME_HEIGHT))
         fps= float(vid_reader.get(cv2.CAP_PROP_FPS))
         
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         
         vid_writer = cv2.VideoWriter(dest_path, fourcc, fps, frameSize=(w, h))
         
         if not vid_writer.isOpened():
-            msg.showerror(title="Ошибка", message="Файл назначения не был создан. Проверьте путь назначения.")
+            msg.showerror(
+                title="Ошибка",
+                message="Файл назначения не был создан. Проверьте путь назначения."
+            )
             return
         
         while vid_reader.grab():
@@ -377,7 +385,10 @@ class Task4(main.TaskFrame):
         
         vid_reader.release()
         vid_writer.release()
-        msg.showinfo(title="Успех", message=f'Видео успешно сохранено в: {dest_path} .')  
+        msg.showinfo(
+            title="Успех",
+            message=f'Видео успешно сохранено в: {dest_path} .'
+        )  
     
 
 class Task5(main.TaskFrame):
@@ -386,28 +397,29 @@ class Task5(main.TaskFrame):
     Вывести на экран два окна, в одном изображение в формате HSV,
     в другом – исходное изображение.'''
     def _set_task(self) -> None:
-        self._main_frame = ttk.Frame(self._root)
-        self._main_frame.pack(expand=True, fill='both')
-        
+        self._root.rowconfigure(index=(0, 2), weight=1)
+        self._root.rowconfigure(index=1, weight=2)
+        self._root.columnconfigure(index=(0, 1), weight=1)
+                
         ttk.Label(
-            self._main_frame,
+            self._root,
             text="Два изображения: HSV и BGR"
-        ).pack(expand=True)
+        ).grid(row=0, column=0, columnspan=2)
         
         self._choose_btn = ttk.Button(
-            self._main_frame,
+            self._root,
             text='Выбрать файл...',
             command=self._set_src_path
         )
-        self._choose_btn.pack(expand=True)
+        self._choose_btn.grid(row=2, column=0)
         
         self._show_btn = ttk.Button(
-            self._main_frame,
+            self._root,
             text='Показать',
             command=self._show_hsv_rgb,
             state="disabled"
         )
-        self._show_btn.pack(expand=True)
+        self._show_btn.grid(row=2, column=1)
     
     def _set_src_path(self) -> None:
         try:
@@ -440,7 +452,7 @@ class Task5(main.TaskFrame):
         
         image_path = self._filepath
         
-        Task2.show_image(image_path, 'original')
+        Task2.show_image(image_path, 'original', color_space=cv2.COLOR_BGR2BGRA)
         cv2.moveWindow('original', 300, 200)
         Task2.show_image(image_path, 'HSV', color_space=cv2.COLOR_BGR2HSV)
         cv2.moveWindow('HSV', 900, 200)
@@ -457,19 +469,20 @@ class Task6(main.TaskFrame):
     Вывести в центре на экране Красный крест в формате,
     как на изображении.'''
     def _set_task(self) -> None:
-        self._main_frame = ttk.Frame(self._root)
-        self._main_frame.pack(expand=True, fill='both')
+        self._root.rowconfigure(index=(0, 2), weight=1)
+        self._root.rowconfigure(index=1, weight=2)
+        self._root.columnconfigure(index=(0, 1), weight=1)
         
         ttk.Label(
-            self._main_frame,
+            self._root,
             text="Изображение с веб-камеры с красным крестом"
-        ).pack(expand=True)
+        ).grid(row=0, column=0, columnspan=2)
         
         ttk.Button(
-            self._main_frame,
+            self._root,
             text='Показать видео',
             command=self._show_cam
-        ).pack(expand=True)
+        ).grid(row=2, column=0, columnspan=2)
     
     def _show_cam(self) -> None:
         cap = cv2.VideoCapture(0)
@@ -504,28 +517,29 @@ class Task7(main.TaskFrame):
     '''Лаб 1. Задание 7.
     Отобразить информацию с вебкамеры, записать видео в файл, продемонстрировать видео.'''
     def _set_task(self) -> None:
-        self._main_frame = ttk.Frame(self._root)
-        self._main_frame.pack(expand=True, fill='both')
+        self._root.rowconfigure(index=(0, 2), weight=1)
+        self._root.rowconfigure(index=1, weight=2)
+        self._root.columnconfigure(index=(0, 1), weight=1)
         
         ttk.Label(
-            self._main_frame, 
+            self._root, 
             text="Запись и отображение видео с веб-камеры"
-        ).pack(expand=True)
+        ).grid(row=0, column=0, columnspan=2)
         
         self._save_btn = ttk.Button(
-            self._main_frame,
+            self._root,
             text='Сохранить как...',
             command=self._set_dest_path
         )
-        self._save_btn.pack(expand=True)
+        self._save_btn.grid(row=2, column=0)
         
         self._rec_btn = ttk.Button(
-            self._main_frame,
+            self._root,
             text='Начать запись...',
             state='disabled',
             command=self._record_cam
         )
-        self._rec_btn.pack(expand=True)
+        self._rec_btn.grid(row=2, column=1)
         
     def _set_dest_path(self) -> None:
         try:
@@ -587,19 +601,20 @@ class Task7(main.TaskFrame):
 class Task8(main.TaskFrame):
     '''Лаб 1. Задание 8'''
     def _set_task(self) -> None:
-        self._main_frame = ttk.Frame(self._root)
-        self._main_frame.pack(expand=True, fill='both')
+        self._root.rowconfigure(index=(0, 2), weight=1)
+        self._root.rowconfigure(index=1, weight=2)
+        self._root.columnconfigure(index=(0, 1), weight=1)
         
         ttk.Label(
-            self._main_frame,
+            self._root,
             text="Веб-камера с цветочувствительным центром"
-        ).pack(expand=True)
+        ).grid(row=0, column=0, columnspan=2)
         
         ttk.Button(
-            self._main_frame,
+            self._root,
             text='Показать видео',
             command=self._show_cam
-        ).pack(expand=True)
+        ).grid(row=2, column=0, columnspan=2)
         
     @staticmethod
     def round_color(color: Iterable[int]):
@@ -645,35 +660,32 @@ class Task8(main.TaskFrame):
 class Task9(main.TaskFrame):
     '''Лаб 1. Задание 9'''
     def _set_task(self) -> None:
-        self._main_frame = ttk.Frame(self._root)
-        self._main_frame.pack(expand=True, fill='both')
-        
-        self._main_frame.rowconfigure(index=(0, 2), weight=1)
-        self._main_frame.rowconfigure(index=1, weight=2)
-        self._main_frame.columnconfigure(index=(0,1,2), weight=1)
+        self._root.rowconfigure(index=(0, 2), weight=1)
+        self._root.rowconfigure(index=1, weight=2)
+        self._root.columnconfigure(index=(0, 1), weight=1)
         
         ttk.Label(
-            self._main_frame,
+            self._root,
             text="Трансляция с ip-камеры"
-        ).grid(row=0, column=0, columnspan=3)
+        ).grid(row=0, column=0, columnspan=2)
             
         ttk.Label(
-            self._main_frame,
+            self._root,
             text="Введите ip-адрес камеры:"
         ).grid(row=1, column=0)
         
         self._ip_var = tk.StringVar(value="")
         
         ttk.Entry(
-            self._main_frame,
+            self._root,
             textvariable=self._ip_var
-        ).grid(row=1, column=1, columnspan=2)
+        ).grid(row=1, column=1)
         
         ttk.Button(
-            self._main_frame,
+            self._root,
             text='Открыть камеру',
             command=self._show_cam
-        ).grid(row=2, column=0, columnspan=3)
+        ).grid(row=2, column=0, columnspan=2)
     
     def _show_cam(self) -> None:
         if (ip:=self._ip_var.get()) != "":
