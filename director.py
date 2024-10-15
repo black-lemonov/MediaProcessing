@@ -7,6 +7,7 @@ from ttkthemes import ThemedTk
 
 import app
 import lab1.tasks as lab1
+import lab2.tasks as lab2
 
 
 class Builder(ABC):
@@ -60,7 +61,23 @@ class TkBuilder(Builder):
         )
         
     def set_lab2(self) -> None:
-        raise NotImplementedError
+        lab2_frame = ttk.Frame(self._labs_nbook)
+        tasks_master = ttk.Notebook(lab2_frame) 
+        task1 = lab2.Task1(tasks_master, 'Задание 1')
+        task2 = lab2.Task2(tasks_master, 'Задание 2')
+        task3 = lab2.Task3(tasks_master, 'Задание 3')
+        task4 = lab2.Task4(tasks_master, 'Задание 4')
+        task5 = lab2.Task5(tasks_master, 'Задание 5')
+        tasks = (task1, task2, task3, task4, task5)
+        self._labs.append(
+            app.LabFrame(
+                self._labs_nbook,
+                lab2_frame,
+                tasks_master,
+                tasks,
+                'Лаб 2'
+            )
+        )
     
     def set_lab3(self) -> None:
         raise NotImplementedError
@@ -88,5 +105,6 @@ class ThemedTkBuilder(TkBuilder):
 class Director:
     def min_app(self, builder: Builder) -> app.App:
         builder.set_lab1()
+        builder.set_lab2()
         return builder.app
         
