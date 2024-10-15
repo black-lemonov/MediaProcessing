@@ -45,6 +45,9 @@ class Task1:
     
 
 class Task2(Task1):
+    '''
+    Фильтрация изображения
+    '''
     @override
     def hook1(self) -> None:
         '''Ползунки'''
@@ -135,6 +138,9 @@ class Task2(Task1):
 
 
 class Task3(Task2):
+    '''
+    Морфологические преобразования
+    '''
     @override
     def hook1(self):
         super().hook1()
@@ -149,7 +155,7 @@ class Task3(Task2):
             op=cv2.MORPH_OPEN,
             kernel=kernel
         )
-        opening_frame = cv2.bitwise_and(
+        self._opening_frame = cv2.bitwise_and(
             self._frame,
             self._frame,
             mask=self._opening_mask
@@ -157,14 +163,14 @@ class Task3(Task2):
         self.hook4()
         cv2.imshow(
             winname="opening",
-            mat=opening_frame
+            mat=self._opening_frame
         )
         self._closing_mask = cv2.morphologyEx(
             src=self._red_mask,
             op=cv2.MORPH_CLOSE,
             kernel=kernel
         )
-        closing_frame = cv2.bitwise_and(
+        self._closing_frame = cv2.bitwise_and(
             self._frame,
             self._frame,
             mask=self._closing_mask
@@ -172,7 +178,7 @@ class Task3(Task2):
         self.hook5()
         cv2.imshow(
             winname="closing",
-            mat=closing_frame
+            mat=self._closing_frame
         )
     
     def hook4(self) -> None:
@@ -188,16 +194,26 @@ class Task4(Task3):
     @override
     def hook4(self) -> None:
         moments = cv2.moments(self._opening_mask, True)
-        self._m00 = moments["m00"]
-        self._m10 = moments["m10"]
-        self._m01 = moments["m01"]
+        m00 = moments["m00"]
+        m10 = moments["m10"]
+        m01 = moments["m01"]
+        cv2.putText(
+            self._opening_frame,
+            f'Object area: {m00:,.0f} ; M10: {m10:,.0f} ; M01: {m01:,.0f} ;',
+            (20, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1
+        )
     
     @override
     def hook5(self) -> None:
         moments = cv2.moments(self._closing_mask, True)
-        self._m00 = moments["m00"]
-        self._m10 = moments["m10"]
-        self._m01 = moments["m01"]
+        m00 = moments["m00"]
+        m10 = moments["m10"]
+        m01 = moments["m01"]
+        cv2.putText(
+            self._closing_frame,
+            f'Object area: {m00:,.0f} ; M10: {m10:,.0f} ; M01: {m01:,.0f} ;',
+            (20, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1
+        )
         
 
 class Task5(Task2):

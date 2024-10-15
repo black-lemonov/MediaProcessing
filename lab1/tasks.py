@@ -1,6 +1,5 @@
 '''Виджеты с заданиями к лаб 1.'''
 
-from typing import override
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.filedialog as fd  
@@ -52,7 +51,6 @@ class Task2(app.TaskFrame):
                 variable=self._size_var
             ).pack(expand=True, fill='x')
         
-    @override
     def _set_task(self) -> None:
         self._root.rowconfigure(index=(0,2), weight=1)
         self._root.rowconfigure(index=1, weight=2)
@@ -97,7 +95,7 @@ class Task2(app.TaskFrame):
             self._filepath = fd.askopenfilename(
                 title='Выберите изображение:',
                 initialdir=default_dir,
-                filetypes=(("*",".png .jpg .jpeg .ico"),)
+                filetypes=(('',".png .jpg .jpeg .ico"),)
             )
             if len(self._filepath) != 0:
                 if (file_dir:=os.path.dirname(self._filepath)) != default_dir:
@@ -156,7 +154,6 @@ class Task3(app.TaskFrame):
                 variable=self._win_var
             ).pack(expand=True, fill='x')
     
-    @override
     def _set_task(self) -> None:
         self._root.rowconfigure(index=(0, 2), weight=1)
         self._root.rowconfigure(index=1, weight=2)
@@ -225,7 +222,6 @@ class Task3(app.TaskFrame):
 
 class Task4(app.TaskFrame):
     '''Лаб 1. Задание 4. Записывает видео из файла в другой файл'''
-    @override
     def _set_task(self) -> None:
         self._root.rowconfigure(index=(0, 2), weight=1)
         self._root.rowconfigure(index=1, weight=2)
@@ -358,7 +354,7 @@ class Task5(app.TaskFrame):
             self._filepath = fd.askopenfilename(
                 title='Выберите изображение:',
                 initialdir=default_dir,
-                filetypes=(("*",".png .jpg .jpeg .ico"),)
+                filetypes=(('',".png .jpg .jpeg .ico"),)
             )
             if len(self._filepath) != 0:
                 if (file_dir:=os.path.dirname(self._filepath)) != default_dir:

@@ -22,6 +22,10 @@ CV_WINDOW_FLAGS: Final[dict[Literal["NORMAL", "FULLSCREEN", "KEEPRATIO"], int]] 
     "KEEPRATIO": cv2.WND_PROP_ASPECT_RATIO
 }
 
+class Task1:
+    def show_image():
+        pass
+
 def show_image(path: str,
                win_title: str = 'image',
                win_flag: int = cv2.WINDOW_NORMAL,
@@ -161,7 +165,8 @@ def record_cam(dest_path: str) -> None:
         cv2.putText(
             frame,
             f'win size: {w}x{h} fps: {fps} time: {time.strftime("%H:%M:%S", time.localtime())}',
-            (0, h - 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2)
+            (0, h - 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2
+        )
         cv2.imshow("cam", frame)
         vid_writer.write(frame)
         if cv2.waitKey(1) == 27:
