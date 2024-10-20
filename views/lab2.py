@@ -1,8 +1,7 @@
-import tkinter as tk
 import tkinter.ttk as ttk
 
 import app
-import lab2.funcs as funcs
+import model.lab2 as lab2
 
 class Task1(app.TaskFrame):
     def _set_task(self) -> None:
@@ -18,7 +17,7 @@ class Task1(app.TaskFrame):
         ttk.Button(
             self._root,
             text='Включить камеру',
-            command=funcs.Task1().main
+            command=lab2.Task1().main
         ).grid(row=2, column=0, columnspan=2)
 
 
@@ -36,7 +35,7 @@ class Task2(app.TaskFrame):
         ttk.Button(
             self._root,
             text='Включить камеру',
-            command=funcs.Task2().main
+            command=lab2.Task2().main
         ).grid(row=2, column=0, columnspan=2)
         
 
@@ -54,7 +53,7 @@ class Task3(app.TaskFrame):
         ttk.Button(
             self._root,
             text='Включить камеру',
-            command=funcs.Task3().main
+            command=lab2.Task3().main
         ).grid(row=2, column=0, columnspan=2)
 
 
@@ -72,7 +71,7 @@ class Task4(app.TaskFrame):
         ttk.Button(
             self._root,
             text='Включить камеру',
-            command=funcs.Task4().main
+            command=lab2.Task4().main
         ).grid(row=2, column=0, columnspan=2)
         
 
@@ -90,7 +89,7 @@ class Task5(app.TaskFrame):
         ttk.Button(
             self._root,
             text='Включить камеру',
-            command=funcs.Task5().main
+            command=lab2.Task5().main
         ).grid(row=2, column=0, columnspan=2)
         
     

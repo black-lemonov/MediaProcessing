@@ -9,8 +9,10 @@ import os
 import re
 
 import app
-import lab1.funcs as funcs
+import model.lab1 as lab1
 
+# TODO: СОХРАНЕНИЕ ПУТИ ФАЙЛА ИСПОЛЬЗУЕТ ПУТЬ ИЗ КОНФИГА НО ЧТО ЕСЛИ ОН НЕПРАВИЛЬНЫЙ?
+# TODO: ВЫНЕСТИ СОХРАНЕНИЕ ПУТИ К ПАПКЕ ОТДЕЛЬНОЙ ФУНКЦИЕЙ
 
 class Task2(app.TaskFrame):
     '''Лаб 1. Задание 2.
@@ -18,7 +20,7 @@ class Task2(app.TaskFrame):
     и с разными цвето-фильтрами.'''
     
     def _set_colors_frame(self) -> None:
-        _color_spaces = funcs.CV_COLOR_SPACES
+        _color_spaces = lab1.CV_COLOR_SPACES
         self._color_space_var = tk.IntVar(value=_color_spaces["BGRA"])
         self._colors_frame = ttk.Frame(self._root)
         ttk.Label(
@@ -35,7 +37,7 @@ class Task2(app.TaskFrame):
             ).pack(expand=True, fill='x')
             
     def _set_wins_frame(self) -> None:
-        _win_flags = funcs.CV_WINDOW_FLAGS
+        _win_flags = lab1.CV_WINDOW_FLAGS
         self._size_var = tk.IntVar(value=_win_flags["NORMAL"])
         self._sizes_frame = ttk.Frame(self._root)
         ttk.Label(
@@ -83,13 +85,13 @@ class Task2(app.TaskFrame):
         
     def _set_filepath(self) -> None:
         try:
-            with open("defaults.json", 'r') as defaults:
+            with open("config.json", 'r') as defaults:
                 defaults_dict = json.loads(defaults.read())
             default_dir = defaults_dict["images_default_dir"]
         except FileNotFoundError:
             msg.showerror(
                 title="Нет файла",
-                message="Отсутствует файл defaults.json, проверьте файл и повторите позже."
+                message="Отсутствует файл config.json, проверьте файл и повторите позже."
             )
         else:
             self._filepath = fd.askopenfilename(
@@ -101,7 +103,7 @@ class Task2(app.TaskFrame):
                 if (file_dir:=os.path.dirname(self._filepath)) != default_dir:
                     default_dir = file_dir
                     defaults_dict["images_default_dir"] = default_dir
-                    with open("defaults.json", 'w') as defaults:
+                    with open("config.json", 'w') as defaults:
                         json.dump(defaults_dict, defaults)
                 self._open_btn.config(state='normal')
     
@@ -109,19 +111,19 @@ class Task2(app.TaskFrame):
         size = self._size_var.get()
         color_space = self._color_space_var.get()
         path = self._filepath
-        funcs.show_image(
+        lab1.show_image(
             path,
             win_title=path,
             win_flag=size,
             color_space=color_space
         )
-        funcs.close_window(win_title=path)
+        lab1.close_window(win_title=path)
 
 
 class Task3(app.TaskFrame):
     '''Лаб 1. Задание 3. Открытие видео с разными фильтрами.'''    
     def _set_colors_frame(self) -> None:
-        _color_spaces = funcs.CV_COLOR_SPACES
+        _color_spaces = lab1.CV_COLOR_SPACES
         self._color_space_var = tk.IntVar(value=_color_spaces['BGRA'])
         self._colors_frame = ttk.Frame(self._root)
         ttk.Label(
@@ -138,7 +140,7 @@ class Task3(app.TaskFrame):
             ).pack(expand=True, fill='x')
             
     def _set_wins_frame(self) -> None:
-        _win_flags = funcs.CV_WINDOW_FLAGS
+        _win_flags = lab1.CV_WINDOW_FLAGS
         self._win_var = tk.IntVar(value=_win_flags['NORMAL'])
         self._wins_frame = ttk.Frame(self._root)
         ttk.Label(
@@ -186,13 +188,13 @@ class Task3(app.TaskFrame):
         
     def _set_filepath(self) -> None:
         try:
-            with open("defaults.json", 'r') as defaults:
+            with open("config.json", 'r') as defaults:
                 defaults_dict = json.loads(defaults.read())
             default_dir = defaults_dict["videos_default_dir"]
         except FileNotFoundError:
             msg.showerror(
                 title="Нет файла",
-                message="Отсутствует файл defaults.json, проверьте файл и повторите позже."
+                message="Отсутствует файл config.json, проверьте файл и повторите позже."
             )
         else:
             self._filepath = fd.askopenfilename(
@@ -204,7 +206,7 @@ class Task3(app.TaskFrame):
                 if (file_dir:=os.path.dirname(self._filepath)) != default_dir:
                     default_dir = file_dir
                     defaults_dict["videos_default_dir"] = default_dir
-                    with open("defaults.json", 'w') as defaults:
+                    with open("config.json", 'w') as defaults:
                         json.dump(defaults_dict, defaults)
                 self._play_btn.config(state='normal')
     
@@ -212,7 +214,7 @@ class Task3(app.TaskFrame):
         path = self._filepath
         size = self._win_var.get()
         color_space = self._color_space_var.get()
-        funcs.play_video(
+        lab1.play_video(
             path,
             win_title=path,
             win_flag=size,
@@ -249,13 +251,13 @@ class Task4(app.TaskFrame):
 
     def _set_src_path(self) -> None:
         try:
-            with open("defaults.json", 'r') as defaults:
+            with open("config.json", 'r') as defaults:
                 defaults_dict = json.loads(defaults.read())
             default_dir = defaults_dict["videos_default_dir"]
         except FileNotFoundError:
             msg.showerror(
                 title="Нет файла",
-                message="Отсутствует файл defaults.json, проверьте файл и повторите позже."
+                message="Отсутствует файл config.json, проверьте файл и повторите позже."
             )
         else:
             self._filepath = fd.askopenfilename(
@@ -267,19 +269,19 @@ class Task4(app.TaskFrame):
                 if (file_dir:=os.path.dirname(self._filepath)) != default_dir:
                     default_dir = file_dir
                     defaults_dict["videos_default_dir"] = default_dir
-                    with open("defaults.json", 'w') as defaults:
+                    with open("config.json", 'w') as defaults:
                         json.dump(defaults_dict, defaults)
                 self._save_btn.config(state='normal')
         
     def _set_dest_path(self) -> None:
         try:
-            with open("defaults.json", 'r') as defaults:
+            with open("config.json", 'r') as defaults:
                 defaults_dict = json.loads(defaults.read())
             default_dir = defaults_dict["videos_default_dir"]
         except FileNotFoundError:
             msg.showerror(
                 title="Нет файла",
-                message="Отсутствует файл defaults.json, проверьте файл и повторите позже."
+                message="Отсутствует файл config.json, проверьте файл и повторите позже."
             )
         else:
             self._dest_path = fd.asksaveasfilename(
@@ -293,7 +295,7 @@ class Task4(app.TaskFrame):
                 if (file_dir:=os.path.dirname(self._filepath)) != default_dir:
                     default_dir = file_dir
                     defaults_dict["images_default_dir"] = default_dir
-                    with open("defaults.json", 'w') as defaults:
+                    with open("config.json", 'w') as defaults:
                         json.dump(defaults_dict, defaults)
         
     def _save_video(self) -> None:
@@ -305,7 +307,7 @@ class Task4(app.TaskFrame):
         self._choose_btn.config(state='disabled')
         self._save_btn.config(state='disabled')
         self._root.update()
-        funcs.save_video(src, dest)
+        lab1.save_video(src, dest)
         self._choose_btn.config(state='normal')
         self._save_btn.config(state='normal')   
     
@@ -342,13 +344,13 @@ class Task5(app.TaskFrame):
     
     def _set_src_path(self) -> None:
         try:
-            with open("defaults.json", 'r') as defaults:
+            with open("config.json", 'r') as defaults:
                 defaults_dict = json.loads(defaults.read())
             default_dir = defaults_dict["images_default_dir"]
         except FileNotFoundError:
             msg.showerror(
                 title="Нет файла",
-                message="Отсутствует файл defaults.json, проверьте файл и повторите позже."
+                message="Отсутствует файл config.json, проверьте файл и повторите позже."
             )
         else:
             self._filepath = fd.askopenfilename(
@@ -360,7 +362,7 @@ class Task5(app.TaskFrame):
                 if (file_dir:=os.path.dirname(self._filepath)) != default_dir:
                     default_dir = file_dir
                     defaults_dict["images_default_dir"] = default_dir
-                    with open("defaults.json", 'w') as defaults:
+                    with open("config.json", 'w') as defaults:
                         json.dump(defaults_dict, defaults)
                 self._show_btn.config(state="normal")
                 
@@ -371,13 +373,13 @@ class Task5(app.TaskFrame):
         
         path = self._filepath
         
-        bgra = funcs.CV_COLOR_SPACES['BGRA']
-        hsv = funcs.CV_COLOR_SPACES['HSV']
-        funcs.show_image(path, win_title='original', color_space=bgra)
-        funcs.move_window(win_title='original', x=300, y=200)
-        funcs.show_image(path, win_title='HSV', color_space=hsv)
-        funcs.move_window(win_title='HSV', x=900, y=200)
-        funcs.close_all()
+        bgra = lab1.CV_COLOR_SPACES['BGRA']
+        hsv = lab1.CV_COLOR_SPACES['HSV']
+        lab1.show_image(path, win_title='original', color_space=bgra)
+        lab1.move_window(win_title='original', x=300, y=200)
+        lab1.show_image(path, win_title='HSV', color_space=hsv)
+        lab1.move_window(win_title='HSV', x=900, y=200)
+        lab1.close_all()
         
         self._choose_btn.config(state='normal')
         
@@ -400,7 +402,7 @@ class Task6(app.TaskFrame):
         ttk.Button(
             self._root,
             text='Показать видео',
-            command=funcs.show_cam
+            command=lab1.show_cam
         ).grid(row=2, column=0, columnspan=2)
             
 
@@ -434,13 +436,13 @@ class Task7(app.TaskFrame):
         
     def _set_dest_path(self) -> None:
         try:
-            with open("defaults.json", 'r') as defaults:
+            with open("config.json", 'r') as defaults:
                 defaults_dict = json.loads(defaults.read())
             default_dir = defaults_dict["videos_default_dir"]
         except FileNotFoundError:
             msg.showerror(
                 title="Нет файла",
-                message="Отсутствует файл defaults.json, проверьте файл и повторите позже."
+                message="Отсутствует файл config.json, проверьте файл и повторите позже."
             )
         else:
             self._filepath = fd.asksaveasfilename(
@@ -454,13 +456,13 @@ class Task7(app.TaskFrame):
                 if (file_dir:=os.path.dirname(self._filepath)) != default_dir:
                     default_dir = file_dir
                     defaults_dict["images_default_dir"] = default_dir
-                    with open("defaults.json", 'w') as defaults:
+                    with open("config.json", 'w') as defaults:
                         json.dump(defaults_dict, defaults)
                 self._rec_btn.config(state='normal')
     
     def _record_cam(self) -> None:
         dest_path = self._filepath
-        funcs.record_cam(dest_path)
+        lab1.record_cam(dest_path)
         self._rec_btn.config(state='disabled')  
     
                 
@@ -479,7 +481,7 @@ class Task8(app.TaskFrame):
         ttk.Button(
             self._root,
             text='Показать видео',
-            command=funcs.show_cam2
+            command=lab1.show_cam2
         ).grid(row=2, column=0, columnspan=2)
             
 
@@ -535,6 +537,6 @@ class Task9(app.TaskFrame):
             
     def _show_cam(self) -> None:
         ip = self._ip_var.get()
-        funcs.play_video(path=ip)
+        lab1.play_video(path=ip)
 
     

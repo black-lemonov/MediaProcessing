@@ -5,9 +5,9 @@ from typing import Literal, override
 
 from ttkthemes import ThemedTk
 
-import app
-import lab1.tasks as lab1
-import lab2.tasks as lab2
+import app as app
+import views.lab1 as lab1
+import views.lab2 as lab2
 
 
 class Builder(ABC):
