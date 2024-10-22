@@ -3,61 +3,50 @@ import time
 import cv2
 import numpy as np
 
+def normalised(matlike):
+    return matlike / np.sum(matlike)
 
-def get_gauss_kernel(n: int, sigma: int) -> None:
-    '''Ядро для Гауссовского размытия'''
-    if n <= 0 or n % 2 == 0:
-        raise ValueError("Размерность должна быть положительным нечетным числом!")
-    print(f"Size: {n} x {n}. Sigma: {sigma}")
-    vect = cv2.getGaussianKernel(n, sigma)
-    kernel = vect @ vect.T
-    print(kernel)
+
+def convolution(mat1, mat2) -> float:
+    '''Операция свёртки'''
+    res = 0
+    for i in range(len(mat1)):
+        for j in range(len(mat1[i])):
+            res += mat1[i][j] * mat2[i][j]
+    return res
+
+
+def gauss(x: int, y: int, sigma: float, mu_x: float, mu_y: float) -> float:
+    return 1 / (2 * np.pi * sigma ** 2) * np.e ** (-((x-mu_x)**2 + (y-mu_y)**2)/(2*sigma**2))
+
     
-
-def gauss(x: int, y: int, sigma: int, mu_x: float, mu_y: float) -> float:
-    return 1 / (np.pi * sigma ** 2) * np.e ** (((x-mu_x)**2 + (y-mu_y)**2)/(2*sigma**2))
-
-
-def normalize(mat, dim: int) -> None:
-    for i in range(dim):
-        for j in range(dim):
-            mat[i][j] **= 2
-    mat_sum = np.sum(mat)
-    for i in range(dim):
-        for j in range(dim):
-            mat[i][j] /= mat_sum
-            mat[i][j] **= 0.5
-    
-    
-def get_gauss_kernel2(ksize: int, sigma: float, mu_x: float, mu_y: float) -> None:
+def gauss_kernel(ksize: int, sigma: float, mu_x: float, mu_y: float):
     kernel = np.empty((ksize, ksize))
     for i in range(ksize):
         for j in range(ksize):
-            kernel[i,j] = gauss(i, j, sigma, mu_x, mu_y)
-    normalize(kernel, ksize)    
+            kernel[i, j] = gauss(i, j, sigma, mu_x, mu_y)
     return kernel
 
-
-def gaussian_blur(img, w: int, h: int, kernel, ksize: int) -> None:
+                
+def gaussian_blur(img, w: int, h: int, kernel, ksize: int):
     margin = ksize // 2
-    for i in range(margin-1, h - margin):
+    blurred = np.zeros((h-margin*2, w-margin*2), np.int16)
+    for i in range(margin, h - margin):
         for j in range(margin, w - margin):
-            val = 0
-            for k in range(ksize):
-                for l in range(ksize):    
-                    val += kernel[k][l] * img[i - margin + k][j - margin + k][0]
-            img[i][j] = val
-                     
-
+            region = img[i-margin: i+margin+1, j-margin: j+margin+1]
+            blurred[i-margin, j-margin] = convolution(region, kernel)
+    return blurred
+            
+    
 cv2.namedWindow("original")
-img = cv2.imread("/home/egorp/Изображения/osaka_smart.jpg")
+img = cv2.imread("/home/egorp/Изображения/osaka_smart.jpg", cv2.IMREAD_GRAYSCALE)
 cv2.imshow("original", img)
-w, h, _ = img.shape
-kernel = get_gauss_kernel2(5, 1.3, 3, 3)
-gaussian_blur(img, w, h, kernel, 5)
+w, h  = img.shape
+kernel = gauss_kernel(5, 1.2, 3, 3)
+kernel = normalised(kernel)
+print(kernel)
+blurred = gaussian_blur(img, w, h, kernel, 5) / 255
 cv2.namedWindow("blurred")
-cv2.imshow("blurred", img)
+cv2.imshow("blurred", blurred)
 if cv2.waitKey(0) != 27:
-    cv2.destroyAllWindows()
-
-
+    cv2.destroyWindow("blurred")
