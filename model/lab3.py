@@ -30,7 +30,7 @@ def gauss_kernel(ksize: int, sigma: float, mu_x: float, mu_y: float):
                 
 def gaussian_blur(img, w: int, h: int, kernel, ksize: int):
     margin = ksize // 2
-    blurred = np.zeros((h-margin*2, w-margin*2), np.int16)
+    blurred = np.zeros((h-margin*2, w-margin*2), np.uint8)
     for i in range(margin, h - margin):
         for j in range(margin, w - margin):
             region = img[i-margin: i+margin+1, j-margin: j+margin+1]
@@ -41,11 +41,12 @@ def gaussian_blur(img, w: int, h: int, kernel, ksize: int):
 cv2.namedWindow("original")
 img = cv2.imread("/home/egorp/Изображения/osaka_smart.jpg", cv2.IMREAD_GRAYSCALE)
 cv2.imshow("original", img)
+print(img)
 w, h  = img.shape
 kernel = gauss_kernel(5, 1.2, 3, 3)
 kernel = normalised(kernel)
 print(kernel)
-blurred = gaussian_blur(img, w, h, kernel, 5) / 255
+blurred = gaussian_blur(img, w, h, kernel, 5)
 cv2.namedWindow("blurred")
 cv2.imshow("blurred", blurred)
 if cv2.waitKey(0) != 27:
