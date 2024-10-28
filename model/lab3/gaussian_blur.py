@@ -1,3 +1,5 @@
+import tkinter.filedialog as fd
+
 import cv2
 import numpy as np
 from progress.bar import Bar
@@ -71,7 +73,7 @@ def apply_convolution(img, kernel, ksize: int) -> None:
         MatLike: изображение-результат применения свёртки 
     """
     w, h = img.shape[0], img.shape[1]
-    # w, h = h, w
+    w, h = h, w
     margin = ksize // 2
     blurred = np.zeros((h-margin*2, w-margin*2, 3), np.uint8)
     
@@ -95,7 +97,6 @@ def apply_convolution(img, kernel, ksize: int) -> None:
             
             progress_bar.next()
     progress_bar.finish()
-    print("Выполнено успешно!")
     
     return blurred
 
@@ -104,16 +105,23 @@ def main(img_path: str, ksize: int, sigma: float) -> None:
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     kernel = gauss_kernel(ksize, sigma, ksize // 2)
     blurred = apply_convolution(img, kernel, ksize)
+    # blurred = cv2.GaussianBlur(img, (ksize, ksize), sigma)
     
     cv2.namedWindow("original")
     cv2.imshow("original", img)
     cv2.namedWindow("blurred")
     cv2.imshow("blurred", blurred)
+    cv2.moveWindow("blurred", max(img.shape), 100)
     
     if cv2.waitKey(0) != 27:
         cv2.destroyWindow("blurred")
     
 
 if __name__ == "__main__":
-    main(img_path="путь к файлу",
-         ksize=5, sigma=1.5)
+    img_path = fd.askopenfilename(
+        title='Выберите изображение:',
+        initialdir="/home/egorp/Изображения",
+        filetypes=(('',".png .jpg .jpeg .ico"),)
+    )
+    if len(img_path) > 0:
+        main(img_path, ksize=9, sigma=1)
