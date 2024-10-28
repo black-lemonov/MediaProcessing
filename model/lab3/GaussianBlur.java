@@ -9,24 +9,24 @@ public class GaussianBlur {
      * Функция Гаусса от 2 переменных
      * @param x - координата x
      * @param y - координата y
-     * @param sigma - стандартное отклонение для x и y
+     * @param sigma - сред отклонение для x и y
      * @param muX - мат ожидание для x
      * @param muY - мат ожидание для y
      * @return значение функции
      */
-    private static double gauss(int x, int y, double sigma, double muX, double muY) {
+    protected static double gauss(int x, int y, double sigma, double muX, double muY) {
         return 1 / (2 * Math.PI * Math.pow(sigma, 2)) * Math.exp(-(Math.pow(x-muX, 2) + Math.pow(y-muY, 2)) / (2 * Math.pow(sigma, 2)));
     }
 
     /**
      * Нормализованное квадратное ядро Гауссовой свертки
      * @param ksize - размер ядра
-     * @param sigma - стандартное отклонение для функции Гаусса
+     * @param sigma - сред отклонение для функции Гаусса
      * @param muX - мат ожидание x для функции Гаусса
      * @param muY - мат ожидание y для функции Гаусса
      * @return ядро
      */
-    private static double[][] gaussKernel(int ksize, double sigma, double muX, double muY) {
+    protected static double[][] gaussKernel(int ksize, double sigma, double muX, double muY) {
         if (ksize < 0 || ksize % 2 == 0) {
             throw new IllegalArgumentException("Размер ядра должен быть нечетным положительным числом!");
         }
@@ -53,23 +53,23 @@ public class GaussianBlur {
     }
 
     /**
-     * Квадратное ядро Гауссовой свертки. muY берется равным muX.
+     * Нормализованное квадратное ядро Гауссовой свертки. muY берется равным muX.
      * @param ksize - размер ядра
-     * @param sigma - стандартное отклонение для функции Гаусса
+     * @param sigma - сред отклонение для функции Гаусса
      * @param muX - мат ожидание x для функции Гаусса
      * @return ядро
      */
-    private static double[][] gaussKernel(int ksize, double sigma, double muX) {
+    protected static double[][] gaussKernel(int ksize, double sigma, double muX) {
         return gaussKernel(ksize, sigma, muX, muX);
     }
 
     /**
-     * Квадратное ядро Гауссовой свертки. muY и muX берутся равными ksize / 2.  
+     * Нормализованное квадратное ядро Гауссовой свертки. muY и muX берутся равными ksize / 2.  
      * @param ksize - размер ядра
-     * @param sigma - стандартное отклонение для функции Гаусса
+     * @param sigma - сред отклонение для функции Гаусса
      * @return ядро
      */
-    private static double[][] gaussKernel(int ksize, double sigma) {
+    protected static double[][] gaussKernel(int ksize, double sigma) {
         return gaussKernel(ksize, sigma, ksize / 2);
     }
 
@@ -80,7 +80,7 @@ public class GaussianBlur {
      * @param ksize - размер ядра свертки
      * @return изображение-результат применения свертки
      */
-    private static BufferedImage applyConvolution(BufferedImage img, double[][] kernel, int ksize) {
+    protected static BufferedImage applyConvolution(BufferedImage img, double[][] kernel, int ksize) {
         int h = img.getHeight(), w = img.getWidth();
         int margin = ksize / 2;
         BufferedImage resultImage = new BufferedImage(w-2*margin, h-2*margin, BufferedImage.TYPE_INT_RGB);
@@ -108,14 +108,14 @@ public class GaussianBlur {
      * @param sigma - степень размытия
      * @return размытое изображение
      */
-    private static BufferedImage blurImage(BufferedImage img, int ksize, double sigma) {
+    public static BufferedImage blurImage(BufferedImage img, int ksize, double sigma) {
         var kernel = gaussKernel(ksize, sigma);
         BufferedImage blurred = applyConvolution(img, kernel, ksize);
         return blurred;
     }
  
     public static void main(String[] args) {
-        String imgPath = "/home/egorp/Изображения/druid.jpeg";
+        String imgPath = "/home/egorp/Изображения/slavs.jpg";
         int ksize = 5;
         double sigma = 1.5;
 
@@ -130,12 +130,12 @@ public class GaussianBlur {
     
                 @Override
                 public Dimension getPreferredSize() {
-                    return new Dimension(img.getWidth(null), img.getHeight(null));
+                    return new Dimension(img.getWidth(), img.getHeight());
                 }
             });
             origFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             origFrame.pack();
-            origFrame.setLocation(400, 100);
+            origFrame.setLocation(img.getWidth() / 2, 100);
             origFrame.setVisible(true);
 
 
@@ -149,12 +149,12 @@ public class GaussianBlur {
     
                 @Override
                 public Dimension getPreferredSize() {
-                    return new Dimension(blur.getWidth(null), blur.getHeight(null));
+                    return new Dimension(blur.getWidth(), blur.getHeight());
                 }
             });
             blurFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             blurFrame.pack();
-            blurFrame.setLocation(900, 100);
+            blurFrame.setLocation((int) (img.getWidth() * 1.5) + 10, 100);
             blurFrame.setVisible(true);
             
         } catch (IOException e) {
