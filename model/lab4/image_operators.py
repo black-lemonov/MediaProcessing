@@ -17,7 +17,7 @@ class ImageOperator(Protocol):
 
     @property
     @abstractmethod
-    def shape(self) -> Iterable[int]:
+    def size(self) -> int:
         ...
         
 
@@ -39,6 +39,49 @@ class SobelOperator(ImageOperator):
         )
         
     @property
-    def size(self) -> tuple[int]:
-        return (3,3)
+    def size(self) -> int:
+        return 3
+
+
+class PrewittOperator(ImageOperator):
+    @property
+    def x(self) -> np.ndarray:
+        return np.array(
+            [[-1, 0, 1], 
+            [-1, 0, 1], 
+            [-1, 0, 1]]
+        )
+        
+    @property
+    def y(self) -> np.ndarray:
+        return np.array(
+            [[-1, -1, -1], 
+            [0, 0, 0], 
+            [1, 1, 1]]
+        )
+        
+    @property
+    def size(self) -> int:
+        return 3
     
+    
+class RobertsCrossOperator(ImageOperator):
+    @property
+    def x(self) -> np.ndarray:
+        return np.array(
+            [[0, 0, 0], 
+            [0, 0, -1], 
+            [0, 1, 0]]
+        )
+        
+    @property
+    def y(self) -> np.ndarray:
+        return np.array(
+            [[0, 0, 0], 
+            [0, -1, 0], 
+            [0, 0, 1]]
+        )
+        
+    @property
+    def size(self) -> int:
+        return 3
