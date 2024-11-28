@@ -6,8 +6,8 @@ from image_operators import ImageOperator
 
 class EdgeDetector(ABC):
     def __init__(self, operator: ImageOperator):
-        self.__operator: ImageOperator = operator
-        self.__img: Iterable[Iterable] | None = None
+        self._operator: ImageOperator = operator
+        self._img: Iterable[Iterable] | None = None
         
     @abstractmethod
     def detect(self, img: Iterable[Iterable]) -> Iterable[Iterable]:
