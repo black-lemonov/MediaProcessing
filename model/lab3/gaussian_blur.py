@@ -101,6 +101,25 @@ def apply_convolution(img, kernel, ksize: int) -> None:
     return blurred
 
 
+def apply_convolution_gray(gray_img: np.ndarray, kernel: np.ndarray, ksize: int):
+    w, h = gray_img.shape[0], gray_img.shape[1]
+    w, h = h, w
+    margin = ksize // 2
+    result = np.zeros((h-margin*2, w-margin*2), np.int32)
+    
+    for y in range(margin, h - margin):
+        for x in range(margin, w - margin):
+            val = 0 
+            for y0 in range(y - margin, y + margin + 1):
+                for x0 in range(x - margin, x + margin + 1):
+                    img_val = gray_img[y0, x0]
+                    kernel_val = kernel[y0-(y-margin)][x0-(x-margin)]
+                    val += img_val * kernel_val
+            result[y-margin, x-margin] = val
+    
+    return result
+
+
 def main(img_path: str, ksize: int, sigma: float) -> None:
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     kernel = gauss_kernel(ksize, sigma, ksize // 2)
