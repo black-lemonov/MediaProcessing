@@ -1,3 +1,4 @@
+from typing import Sequence
 import tkinter.filedialog as fd
 
 import cv2
@@ -101,7 +102,7 @@ def apply_convolution(img, kernel, ksize: int) -> None:
     return blurred
 
 
-def apply_convolution_gray(gray_img: np.ndarray, kernel: np.ndarray, ksize: int):
+def apply_convolution_gray(gray_img: np.ndarray, kernel: Sequence[Sequence], ksize: int):
     w, h = gray_img.shape[0], gray_img.shape[1]
     w, h = h, w
     margin = ksize // 2
