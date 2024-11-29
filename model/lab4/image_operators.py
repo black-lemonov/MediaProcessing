@@ -1,4 +1,4 @@
-from typing import Protocol, Iterable
+from typing import Protocol, Sequence
 from abc import abstractmethod
 
 import numpy as np
@@ -7,12 +7,12 @@ import numpy as np
 class ImageOperator(Protocol):
     @property
     @abstractmethod
-    def x(self) -> Iterable[Iterable]:
+    def x(self) -> Sequence[Sequence]:
         ...
         
     @property
     @abstractmethod
-    def y(self) -> Iterable[Iterable]:
+    def y(self) -> Sequence[Sequence]:
         ...
 
     @property

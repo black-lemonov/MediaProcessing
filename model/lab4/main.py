@@ -7,7 +7,7 @@ from canny import director
 def main() -> None:
     img_path = fd.askopenfilename(
         title='Выберите изображение:',
-        initialdir="папка с изображениями",
+        initialdir="/home/egorp/Изображения",
         filetypes=(('',".png .jpg .jpeg .ico"),)
     )
     img = cv2.imread(img_path)

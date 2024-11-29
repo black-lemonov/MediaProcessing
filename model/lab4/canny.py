@@ -26,7 +26,7 @@ class CannyEdgeDetector(EdgeDetector):
         self.__calc_gradients()
         self.__calc_lengths()
         self.__calc_angles()
-        self.__supress_nonmax()
+        self.__supress_non_max()
         self.__threshold()
         return self.__edges
     
@@ -54,16 +54,16 @@ class CannyEdgeDetector(EdgeDetector):
             for x in range(w):
                 x_val = self.__gradient_x[y, x]
                 y_val = self.__gradient_y[y, x]
-                tg = self.calc_tangens(y_val, x_val)
-                self.__gradient_angles[y, x] = self.get_pixel(x, y, tg)
+                tg = self.__calc_tangens(y_val, x_val)
+                self.__gradient_angles[y, x] = self.__get_pixel(x, y, tg)
                 
-    def __supress_nonmax(self) -> None:
+    def __supress_non_max(self) -> None:
         self.__edges = np.zeros_like(self._img)
         h, w = self.__edges.shape[0], self.__edges.shape[1] 
         for y in range(2, h - 2):
             for x in range(2, w - 2):
                 angle = self.__gradient_angles[y-1, x-1]
-                n1, n2 = self.get_neighbours(x-1, y-1, angle)
+                n1, n2 = self.__get_neighbours(x-1, y-1, angle)
                 cur_len = self.__gradient_lengths[y-1, x-1]
                 if cur_len >= self.__gradient_lengths[*n1] and cur_len > self.__gradient_lengths[*n2]:
                     self.__edges[y, x] = 255
@@ -111,46 +111,57 @@ class CannyEdgeDetector(EdgeDetector):
     
     
     @staticmethod
-    def get_pixel(x, y, tg):
-        if all((x >= 0, y <= 0, tg < -2.414)) or all((x <= 0, y <= 0, tg > 2.414)):
-            return 0
-        elif all((x >= 0, y <= 0, tg < -0.414)):
-            return 1
-        elif all((x >= 0, y <= 0, tg > -0.414)) or all((x >= 0, y >= 0, tg < 0.414)):
-            return 2
-        elif all((x >= 0, y >= 0, tg < 2.414)):
-            return 3
-        elif all((x >= 0, y >= 0, tg > 2.414)) or all((x <= 0, y >= 0, tg < -2.414)):
-            return 4
-        elif all((x <= 0, y >= 0, tg < -0.414)):
-            return 5
-        elif all((x <= 0, y >= 0, tg > -0.414)) or all((x <= 0, y <= 0, tg < 0.414)):
-            return 6
-        elif all((x <= 0, y <= 0, tg < 2.414)):
-            return 7
-        
+    def __get_pixel(x, y, tg):
+        if x >= 0 and y >= 0:
+            if tg < 0.414:
+                return 2
+            if tg < 2.414:
+                return 3
+            else:
+                return 4
+
+        if x >= 0 and y <= 0:
+            if tg > -0.414:
+                return 2
+            if tg > -2.414:
+                return 1
+            else:
+                return 0
+
+        if x <= 0 and y <= 0:
+            if tg < 0.414:
+                return 6
+            if tg < 2.414:
+                return 7
+            else:
+                return 0
+
+        if x <= 0 and y >= 0:
+            if tg > -0.414:
+                return 6
+            if tg > -2.414:
+                return 5
+            else:
+                return 4
 
     @staticmethod
-    def get_neighbours(x, y, angle: int) -> tuple[tuple[int, int], tuple[int, int]]:
+    def __get_neighbours(x, y, angle: int) -> tuple[tuple[int, int], tuple[int, int]]:
         if angle == 0 or angle == 4:
-            neighbour1 = (y - 1, x)
-            neighbour2 = (y + 1, x)
-        elif angle == 1 or angle == 5:
-            neighbour1 = (y - 1, x + 1)
-            neighbour2 = (y + 1, x - 1)
-        elif angle == 2 or angle == 6:
-            neighbour1 = (y, x + 1)
-            neighbour2 = (y, x - 1)
-        elif angle == 3 or angle == 7:
-            neighbour1 = (y + 1, x + 1)
-            neighbour2 = (y - 1, x - 1)
-        
-        return neighbour1, neighbour2
-
+            return (y - 1, x), (y + 1, x)
+        if angle == 1 or angle == 5:
+            return (y - 1, x + 1), (y + 1, x - 1)
+        if angle == 2 or angle == 6:
+            return (y, x + 1), (y, x - 1)
+        if angle == 3 or angle == 7:
+            return (y + 1, x + 1), (y - 1, x - 1)
 
     @staticmethod
-    def calc_tangens(y: int, x: int) -> float:
-        return y / x if x != 0 else np.inf if y >= 0 else -np.inf  
+    def __calc_tangens(y: int, x: int) -> float | None:
+        if x != 0:
+            return y / x
+        if y >= 0:
+            return np.inf
+        return -np.inf
                 
     
 class CannyDirector:
