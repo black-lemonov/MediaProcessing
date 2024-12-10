@@ -1,6 +1,13 @@
 from tkinter import filedialog as fd
 
 import cv2
+import numpy as np
+
+
+def wb_blur(frame: np.ndarray):
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frame = cv2.GaussianBlur(frame, (5,5), 0)
+    return frame
 
 
 def motion_detection() -> None:
