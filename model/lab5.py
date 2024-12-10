@@ -38,7 +38,7 @@ def motion_detection() -> None:
         frame = wb_blur(frame_raw)
         frame_diff = cv2.absdiff(frame_prev, frame)
         _, frame_threshold = cv2.threshold(frame_diff, thresh, 255, cv2.THRESH_BINARY)
-        contours, hierarchy = cv2.findContours(frame_threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(frame_threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
         if any([cv2.contourArea(cnt) > min_area for cnt in contours]):
             video_writer.write(frame_raw)
